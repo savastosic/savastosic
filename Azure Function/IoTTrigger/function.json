@@ -1,0 +1,22 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "event",
+      "direction": "in",
+      "eventHubName": "iothubowner",
+      "connection": "IotHubConnection",
+      "cardinality": "one",
+      "consumerGroup": "$Default",
+      "dataType": "binary"
+    },
+    {
+      "type": "eventHub",
+      "name": "$return",
+      "eventHubName": "myeventhub",
+      "connection": "MyEventHubSendAppSetting",
+      "direction": "out"
+    }
+  ]
+}
