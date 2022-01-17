@@ -143,20 +143,15 @@ while 1:
 
                             # Add Row Count
                             num_messages = len(realtime_df)
-                            dict = {'tagId': tagName + ":" + "TagCount", 'V': num_messages, 'Q': 192, 'T': datetime.now()}
+                            dict = {'tagId': tagName + ":" + "TagCount", 'V': num_messages, 'Q': 192, 'T': realtime_df['T'][0]}
                             realtime_df = realtime_df.append(dict, ignore_index = True)
 
                             # Convert Timestamp to ISO
-                            try: 
-                                realtime_df['T'] = pd.to_datetime(realtime_df['T'],  errors='coerce')
-                                realtime_df['T'] = realtime_df['T'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                            # On Failure: Save file to archive, Drop row with data concern, Continue
-                            except ValueError:
+                            realtime_df['T'] = pd.to_datetime(realtime_df['T'],  errors='coerce', dayfirst=True)
+                            
+                            if realtime_df.isnull().sum().sum() > 0:
                                 realtime_df.to_csv("C:\Errors" + "\\" + baseFilename + ".csv")
-                                realtime_df['T'] = pd.to_datetime(realtime_df['T'],  errors='coerce')
-                                realtime_df = realtime_df[realtime_df['T'].notna()]
-                                realtime_df['T'] = realtime_df['T'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
+                                realtime_df = realtime_df[realtime_df.notna()]
 
                             # Save Dataframe to JSON
                             csv_js = realtime_df.to_json(orient = 'records', date_format='iso')
@@ -244,44 +239,15 @@ while 1:
                             alarm_df.insert(0, "Truck ID", tagName)
 
                             # Convert Timestamp to ISO
-                            try:
-                                alarm_df['T1'] = pd.to_datetime(alarm_df['T1'],  errors='coerce')
-                                alarm_df['T1'] = alarm_df['T1'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
+                            alarm_df['T1'] = pd.to_datetime(alarm_df['T1'],  errors='coerce', dayfirst=True)
+                            alarm_df['T2'] = pd.to_datetime(alarm_df['T2'],  errors='coerce', dayfirst=True)
+                            alarm_df['T3'] = pd.to_datetime(alarm_df['T3'],  errors='coerce', dayfirst=True)
+                            alarm_df['T4'] = pd.to_datetime(alarm_df['T4'],  errors='coerce', dayfirst=True)
+                            alarm_df['T5'] = pd.to_datetime(alarm_df['T5'],  errors='coerce', dayfirst=True)
 
-                                alarm_df['T2'] = pd.to_datetime(alarm_df['T2'],  errors='coerce')
-                                alarm_df['T2'] = alarm_df['T2'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T3'] = pd.to_datetime(alarm_df['T3'],  errors='coerce')
-                                alarm_df['T3'] = alarm_df['T3'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T4'] = pd.to_datetime(alarm_df['T4'],  errors='coerce')
-                                alarm_df['T4'] = alarm_df['T4'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T5'] = pd.to_datetime(alarm_df['T5'],  errors='coerce')
-                                alarm_df['T5'] = alarm_df['T5'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                            # On Failure: Save file to archive, Drop row with data concern, Continue
-                            except ValueError:
+                            if alarm_df.isnull().sum().sum() > 0:
                                 alarm_df.to_csv("C:\Errors" + "\\" + baseFilename + ".csv")
-                                alarm_df['T1'] = pd.to_datetime(alarm_df['T1'],  errors='coerce')
-                                alarm_df = alarm_df[alarm_df['T1'].notna()]
-                                alarm_df['T1'] = alarm_df['T1'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T2'] = pd.to_datetime(alarm_df['T2'],  errors='coerce')
-                                alarm_df = alarm_df[alarm_df['T2'].notna()]
-                                alarm_df['T2'] = alarm_df['T2'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T3'] = pd.to_datetime(alarm_df['T3'],  errors='coerce')
-                                alarm_df = alarm_df[alarm_df['T3'].notna()]
-                                alarm_df['T3'] = alarm_df['T3'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T4'] = pd.to_datetime(alarm_df['T4'],  errors='coerce')
-                                alarm_df = alarm_df[alarm_df['T4'].notna()]
-                                alarm_df['T4'] = alarm_df['T4'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
-
-                                alarm_df['T5'] = pd.to_datetime(alarm_df['T5'],  errors='coerce')
-                                alarm_df = alarm_df[alarm_df['T5'].notna()]
-                                alarm_df['T5'] = alarm_df['T5'].apply(lambda x: dt.datetime.strftime(x ,'%Y-%d-%mT%H:%M:%SZ'))
+                                alarm_df = alarm_df[alarm_df.notna()]
 
                             # Save Dataframe to JSON
                             alarm_js = alarm_df.to_json(orient = 'records', date_format='iso')

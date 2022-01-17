@@ -34,8 +34,6 @@ def main(event: List[func.EventHubEvent]) -> str:
         try:
             # Process Realtime File
             if 'tagId' in result[0]:
-                num_messages = len(result)
-                logging.info(f'There were {num_messages} rows of data in this file')
 
                 data = json.dumps(result)
                 logging.info("File Processed")
@@ -44,8 +42,8 @@ def main(event: List[func.EventHubEvent]) -> str:
 
             else:
                 logging.info("Not Realtime File")
-                pass
+                return
 
         except IndexError:
             logging.info("Empty File Detected")
-            pass
+            return
